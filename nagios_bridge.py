@@ -102,6 +102,8 @@ def main():
 
 
 # Gunicorn entry point generator
+# To be run like this :
+# $ gunicorn -b IP:port 'nagios_bridge:app(nagios_status_file="/path/to/status/fat")' -D
 def app(*args, **kwargs):
     sys.argv = [sys.argv[0]]
     for k in kwargs:
