@@ -44,7 +44,7 @@ def build_svc_data(svc_status):
     return svc_data
 
 def apply_filter(req, data):
-    if 'data' not in req:
+    if 'data' not in req and type(data) != dict:
         return data
 
     filtered = []
