@@ -24,26 +24,24 @@ reader = nfr.NagiosFileReader(args.nagios_status_file)
 
 # Init
 host_status, svc_status = reader.read_status()
-thread_number = 1
 
 # Create and start the background Thread that will read the Nagios status file
 def interrupt():
     logging.debug('interrupt')
     reader_thread.cancel()
 
-def refresh_data(nu):
-    global reader_thread, host_status, svc_status, host_data, svc_data, thread_number
-    logging.debug(f'refresh_data {thread_number}, active threads={threading.active_count()}, current={threading.current_thread()}')
-    print(f'active threads={threading.active_count()}, nu={nu}, current={threading.current_thread()}')
+def refresh_data():
+    global reader_thread, host_status, svc_status
+    logging.debug('refresh_data active threads={threading.active_count()}, current={threading.current_thread()}')
+
     with data_lock:
         host_status, svc_status = reader.read_status()
 
-    reader_thread = threading.Timer(args.interval, refresh_data, (nu + 1,))
-    thread_number += 1
+    reader_thread = threading.Timer(args.interval, refresh_data, ())
     reader_thread.start()
 
 data_lock = threading.Lock()
-reader_thread = threading.Timer(args.interval, refresh_data, (1,))
+reader_thread = threading.Timer(args.interval, refresh_data, ())
 reader_thread.start()
 atexit.register(interrupt)
 
