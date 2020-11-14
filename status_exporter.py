@@ -49,7 +49,7 @@ def apply_filter(req, data):
 
     filtered = []
     for d in data:
-        for attr, value in req['data']:
+        for attr, value in req['data'].items():
             if attr in d:
                 if d[attr] != value:
                     break

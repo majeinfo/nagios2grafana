@@ -80,7 +80,7 @@ def query():
                 if target == 'nagios_host_status':
                     results = exp.apply_filter(req['targets'][0], host_data)
                 elif target == 'nagios_service_status':
-                    results = exp.apply__filter(req['targets'][0], svc_data)
+                    results = exp.apply_filter(req['targets'][0], svc_data)
                 else:
                     results = {'msg': f'target {target} not supported'}
             else:
