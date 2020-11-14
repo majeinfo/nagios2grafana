@@ -1,3 +1,9 @@
+"""
+This is the class that parses Nagios status file.
+Feel free to change the regexp to capture what you want.
+Beware that values that start with a number will be considered as number by Grafana.
+Also remember that values which are timestamps must be expressed in milliseconds not in seconds.
+"""
 import re
 
 class NagiosFileReader:

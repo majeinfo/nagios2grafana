@@ -1,3 +1,10 @@
+"""
+Code for functions that build the JSON result for the /query request
+sent by Grafana JSON Datasource Plugin.
+We prefer the lazy model : results are computed for each request and not
+when the Nagios status file is read. This makes the filtering process easier.
+"""
+
 host_data = [{
     "type": "table",
     "columns": [

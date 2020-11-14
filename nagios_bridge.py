@@ -1,3 +1,10 @@
+"""
+This is simple Bridge that reads a Nagios Status file and transform it into JSON documents
+so it can be exposed to the Grafana JSON Datasource Plugin.
+It allows you to create a Dashboard that would include a Panel of type Table containing
+the last Hosts and Service statuses reported by Nagios.
+This Bridge also supports filtering : the filters are given as JSON document in the Grafana Query Panel.
+"""
 import argparse
 import threading
 import atexit
