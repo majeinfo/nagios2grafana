@@ -4,8 +4,8 @@ host_data = [{
         {"text": "Current State", "type": "number"},
         {"text": "Hostname", "type": "string"},
         #{"text": "check_execution_time", "type": "number"},
-        {"text": "last_check", "type": "time"},
-        {"text": "plugin_output", "type": "string"},
+        {"text": "Last Check", "type": "time"},
+        {"text": "Plugin Output", "type": "string"},
     ],
     "rows": []
 }]
@@ -17,8 +17,8 @@ svc_data = [{
         {"text": "Hostname", "type": "string"},
         {"text": "Service Description", "type": "string"},
         #{"text": "check_execution_time", "type": "number"},
-        {"text": "last_check", "type": "time"},
-        {"text": "plugin_output", "type": "string"},
+        {"text": "Last Check", "type": "time"},
+        {"text": "Plugin Output", "type": "string"},
     ],
     "rows": []
 }]
