@@ -42,3 +42,20 @@ def build_svc_data(svc_status):
         )
 
     return svc_data
+
+def apply_filter(req, data):
+    if 'data' not in req:
+        return data
+
+    filtered = []
+    for d in data:
+        for attr, value in req['data']:
+            if attr in d:
+                if d[attr] != value:
+                    break
+        else:
+            filtered.append(d)
+
+    data[0]['rows'] = filtered
+    return data
+

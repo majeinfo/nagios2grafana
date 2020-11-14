@@ -75,12 +75,12 @@ def query():
             type = req['targets'][0]['type']
             target = req['targets'][0]['target']
             logging.debug(f'type={type}, target={target}')
-            # test "severity" req['targets'][0]['severity']
+
             if type == "table":
                 if target == 'nagios_host_status':
-                    results = host_data
+                    results = exp.apply_filter(req['targets'][0], host_data)
                 elif target == 'nagios_service_status':
-                    results = svc_data
+                    results = exp.apply__filter(req['targets'][0], svc_data)
                 else:
                     results = {'msg': f'target {target} not supported'}
             else:
@@ -89,5 +89,6 @@ def query():
             logging.error(e)
 
     return json.dumps(results)
+
 
 api.run(port=args.listen_port, debug=False)
