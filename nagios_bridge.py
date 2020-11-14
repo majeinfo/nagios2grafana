@@ -23,8 +23,6 @@ reader = nfr.NagiosFileReader(args.nagios_status_file)
 
 # Init
 host_status, svc_status = reader.read_status()
-host_data = exp.build_host_data(host_status)
-svc_data = exp.build_svc_data(svc_status)
 thread_number = 1
 
 # Create and start the background Thread that will read the Nagios status file
@@ -34,13 +32,10 @@ def interrupt():
 
 def refresh_data(nu):
     global reader_thread, host_status, svc_status, host_data, svc_data, thread_number
-    logging.debug(f'refresh_data {thread_number}')
-    logging.debug(f'active threads={threading.active_count()}, current={threading.current_thread()}')
+    logging.debug(f'refresh_data {thread_number}, active threads={threading.active_count()}, current={threading.current_thread()}')
     print(f'active threads={threading.active_count()}, nu={nu}, current={threading.current_thread()}')
-    host_status, svc_status = reader.read_status()
     with data_lock:
-        host_data = exp.build_host_data(host_status)
-        svc_data = exp.build_svc_data(svc_status)
+        host_status, svc_status = reader.read_status()
 
     reader_thread = threading.Timer(args.interval, refresh_data, (nu + 1,))
     thread_number += 1
@@ -78,9 +73,9 @@ def query():
 
             if type == "table":
                 if target == 'nagios_host_status':
-                    results = exp.apply_filter(req['targets'][0], host_data)
+                    results = exp.build_host_data(req['targets'][0], host_status)
                 elif target == 'nagios_service_status':
-                    results = exp.apply_filter(req['targets'][0], svc_data)
+                    results = exp.build_svc_data(req['targets'][0], svc_status)
                 else:
                     results = {'msg': f'target {target} not supported'}
             else:
