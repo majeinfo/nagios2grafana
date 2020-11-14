@@ -2,6 +2,7 @@ import argparse
 import threading
 import atexit
 import logging
+import traceback
 from flask import Flask, json, request
 import nagios_file_reader as nfr
 import status_exporter as exp
@@ -81,6 +82,7 @@ def query():
             else:
                 results = {'msg': f'type {type} not supported'}
         except Exception as e:
+            traceback.print_exc()
             logging.error(e)
 
     return json.dumps(results)

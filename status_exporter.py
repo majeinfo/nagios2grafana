@@ -49,13 +49,12 @@ def _filtered(req, data):
     if 'data' not in req or type(req['data']) != dict:
         return True
 
-    for d in data:
-        for attr, value in req['data'].items():
-            if attr in d:
-                if d[attr] != value:
-                    break
-        else:
-            return True
+    for attr, value in req['data'].items():
+        if attr in data:
+            if data[attr] != value:
+                break
+    else:
+        return True
 
     return False
 
