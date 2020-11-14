@@ -24,38 +24,38 @@ svc_data = [{
 }]
 
 # Make sure the plugin_output does not start with a number (Grafana bug ?)
-def build_host_data(host_status):
+def build_host_data(req_data, host_status):
     host_data[0]['rows'] = []
     for h in host_status:
-        host_data[0]['rows'].append(
-            [h['current_state'], h['host_name'], h['last_check'], '> ' + h['plugin_output']]
+        if _filtered(req_data, h):
+            host_data[0]['rows'].append(
+                [h['current_state'], h['host_name'], h['last_check'], '> ' + h['plugin_output']]
         )
 
     return host_data
 
 
-def build_svc_data(svc_status):
+def build_svc_data(req_data, svc_status):
     svc_data[0]['rows'] = []
     for s in svc_status:
-        svc_data[0]['rows'].append(
-            [s['current_state'], s['host_name'], s['service_description'], s['last_check'], '> ' + s['plugin_output']]
-        )
+        if _filtered(req_data, s):
+            svc_data[0]['rows'].append(
+                [s['current_state'], s['host_name'], s['service_description'], s['last_check'], '> ' + s['plugin_output']]
+            )
 
     return svc_data
 
-def apply_filter(req, data):
-    if 'data' not in req and type(data) != dict:
-        return data
+def _filtered(req, data):
+    if 'data' not in req or type(req['data']) != dict:
+        return True
 
-    filtered = []
     for d in data:
         for attr, value in req['data'].items():
             if attr in d:
                 if d[attr] != value:
                     break
         else:
-            filtered.append(d)
+            return True
 
-    data[0]['rows'] = filtered
-    return data
+    return False
 
