@@ -44,7 +44,7 @@ def main():
         reader_thread.cancel()
 
     def refresh_data():
-        global reader_thread, host_status, svc_status
+        nonlocal reader_thread, host_status, svc_status
         logging.debug('refresh_data active threads={threading.active_count()}, current={threading.current_thread()}')
 
         with data_lock:
