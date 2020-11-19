@@ -10,5 +10,5 @@ The Grafana Query Panel allows you to filter the data that would be displayed.
 
 Can be run using gunicorn like this :
 
-$ gunicorn -b IP:port 'nagios2grafana:app('nagios_status_file="/path/to/status.dat")'
+$ gunicorn -b IP:port 'nagios2grafana:app(nagios_status_file="/path/to/status.dat")'
 
