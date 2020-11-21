@@ -20,3 +20,12 @@ $ docker container run -d -v /path/to/your/status.dat:/app/status.dat \
 ```
 
 The *Grafana Query Panel* allows you to filter the data that will be displayed.
+You can define filters using regexp enclosed between slashes.
+
+Some filter examples:
+
+```
+{"host_name": "only_one_server"}
+{"service_description": "check web", "current_state": "2"}	(only critical services)
+{"host_name": "/web/"}		(only servers which name matches "web" re)
+```
