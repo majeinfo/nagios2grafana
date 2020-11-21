@@ -4,6 +4,7 @@ sent by Grafana JSON Datasource Plugin.
 We prefer the lazy model : results are computed for each request and not
 when the Nagios status file is read. This makes the filtering process easier.
 """
+import re
 
 host_data = [{
     "type": "table",
@@ -33,6 +34,7 @@ svc_data = [{
 # Make sure the plugin_output does not start with a number (Grafana bug ?)
 def build_host_data(req_data, host_status):
     host_data[0]['rows'] = []
+    _compile_re(req_data)
     for h in host_status:
         if _filtered(req_data, h):
             host_data[0]['rows'].append(
@@ -44,6 +46,7 @@ def build_host_data(req_data, host_status):
 
 def build_svc_data(req_data, svc_status):
     svc_data[0]['rows'] = []
+    _compile_re(req_data)
     for s in svc_status:
         if _filtered(req_data, s):
             svc_data[0]['rows'].append(
@@ -52,13 +55,26 @@ def build_svc_data(req_data, svc_status):
 
     return svc_data
 
+
+def _compile_re(req):
+    if 'data' not in req or type(req['data']) != dict:
+        return
+
+    for attr, value in req['data'].items():
+        if value[0] == '/' and value[-1] == '/':
+            req['data'][attr] = re.compile(value[1:-1])
+
+
 def _filtered(req, data):
     if 'data' not in req or type(req['data']) != dict:
         return True
 
     for attr, value in req['data'].items():
         if attr in data:
-            if data[attr] != value:
+            if type(value) == re.Pattern:
+                if value.search(data[attr]) is None:
+                    break
+            elif data[attr] != value:
                 break
     else:
         return True
