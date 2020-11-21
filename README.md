@@ -29,3 +29,5 @@ Some filter examples:
 {"service_description": "check web", "current_state": "2"}	(only critical services)
 {"host_name": "/web/"}		(only servers which name matches "web" re)
 ```
+
+Tested with Python 3.7+ and Grafana 7+
