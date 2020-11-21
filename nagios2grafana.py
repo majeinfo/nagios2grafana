@@ -67,15 +67,14 @@ def main():
 
     @api.route('/search', methods=['POST'])
     def search():
-        req = request.get_json()
-        logging.debug("/search", req)
+        logging.debug("/search")
         metrics = ["nagios_host_status", "nagios_service_status"]
         return json.dumps(metrics)
 
     @api.route('/query', methods=['POST'])
     def query():
         req = request.get_json()
-        logging.debug('/query', req)
+        logging.debug(f'/query {req}')
         results = {}
         with data_lock:
             try:
