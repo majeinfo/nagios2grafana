@@ -12,4 +12,11 @@ with the Hosts or the Services statuses !
 $ gunicorn -b IP:port 'nagios2grafana:app(nagios_status_file="/path/to/status.dat")'
 ```
 
-The *Grafana Query Panel* allows you to filter the data that would be displayed.
+But you can also run it from a Container image :
+
+```
+$ docker container run -d -v /path/to/your/status.dat:/app/status.dat \
+                          -p 5000:5000 majetraining/nagios2grafana
+```
+
+The *Grafana Query Panel* allows you to filter the data that will be displayed.
