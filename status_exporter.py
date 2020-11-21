@@ -71,7 +71,8 @@ def _filtered(req, data):
 
     for attr, value in req['data'].items():
         if attr in data:
-            if type(value) == re.Pattern:
+            #if type(value) == re.Pattern:  (not supported before python3.7)
+            if type(value) != str:
                 if value.search(data[attr]) is None:
                     break
             elif data[attr] != value:
