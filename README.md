@@ -15,7 +15,7 @@ $ gunicorn -b IP:port 'nagios2grafana:app(nagios_status_file="/path/to/status.da
 But you can also run it from a Container image :
 
 ```
-$ docker container run -d -v /path/to/your/status.dat:/app/status.dat \
+$ docker container run -d -v /path/to/your/status.dat:/config/status.dat \
                           -p 5000:5000 majetraining/nagios2grafana
 ```
 
