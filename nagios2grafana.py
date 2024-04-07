@@ -66,6 +66,7 @@ def main():
         return json.dumps({"status": "OK"})
 
     @api.route('/search', methods=['POST'])
+    @api.route('/metrics', methods=['POST'])
     def search():
         logging.debug("/search")
         metrics = ["nagios_host_status", "nagios_service_status"]
