@@ -79,7 +79,8 @@ def main():
         results = {}
         with data_lock:
             try:
-                type = req['targets'][0]['type']
+                #type = req['targets'][0]['type']
+                type = "table"
                 target = req['targets'][0]['target']
                 logging.debug(f'type={type}, target={target}')
 
