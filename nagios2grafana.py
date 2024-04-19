@@ -101,6 +101,7 @@ def main():
                 traceback.print_exc()
                 logging.error(e)
 
+        logging.debug(f"{results}")
         return json.dumps(results)
 
     return api

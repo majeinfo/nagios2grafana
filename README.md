@@ -12,10 +12,10 @@ with the Hosts or the Services statuses !
 $ gunicorn -b IP:port 'nagios2grafana:app(nagios_status_file="/path/to/status.dat")'
 ```
 
-But you can also run it from a Container image :
+But you can also run it from a Container image (*/path/to* refers to the directory that contains the *status.dat* file):
 
 ```
-$ docker container run -d -v /path/to/your/status.dat:/config/status.dat \
+$ docker container run -d -v /path/to/:/config/ \
                           -p 5000:5000 majetraining/nagios2grafana
 ```
 
