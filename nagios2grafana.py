@@ -11,6 +11,7 @@ import atexit
 import logging
 import traceback
 import sys
+import os
 from flask import Flask, json, request
 import nagios_file_reader as nfr
 import status_exporter as exp
@@ -31,7 +32,11 @@ def main():
                         help='path to nagios status file')
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG if args.verbosity else logging.ERROR)
+    log_level = logging.ERROR
+    if 'DEBUG' in os.environ or args.verbosity:
+        log_level = logging.DEBUG
+
+    logging.basicConfig(level=log_level)
 
     reader = nfr.NagiosFileReader(args.nagios_status_file)
 
@@ -45,13 +50,12 @@ def main():
 
     def refresh_data():
         nonlocal reader_thread, host_status, svc_status
-        logging.debug('refresh_data active threads={threading.active_count()}, current={threading.current_thread()}')
+        logging.debug(f'refresh_data active threads={threading.active_count()}, current={threading.current_thread()}')
 
         with data_lock:
             host_status, svc_status = reader.read_status()
 
-        reader_thread = threading.Timer(args.interval, refresh_data, ())
-        reader_thread.start()
+        reader_thread.run()
 
     data_lock = threading.Lock()
     reader_thread = threading.Timer(args.interval, refresh_data, ())
@@ -68,7 +72,7 @@ def main():
     @api.route('/search', methods=['POST'])
     @api.route('/metrics', methods=['POST'])
     def search():
-        logging.debug("/search")
+        logging.debug("/search or /metrics")
         metrics = ["nagios_host_status", "nagios_service_status"]
         return json.dumps(metrics)
 

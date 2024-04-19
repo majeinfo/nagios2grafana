@@ -19,6 +19,8 @@ $ docker container run -d -v /path/to/your/status.dat:/config/status.dat \
                           -p 5000:5000 majetraining/nagios2grafana
 ```
 
+Debug mode can be enabled by defining the DEBUG environment variable.
+
 The *Grafana Query Panel* allows you to filter the data that will be displayed.
 You can define filters using regexp enclosed between slashes.
 
