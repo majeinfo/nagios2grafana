@@ -5,6 +5,8 @@ Beware that values that start with a number will be considered as number by Graf
 Also remember that values which are timestamps must be expressed in milliseconds not in seconds.
 """
 import re
+import logging
+
 
 class NagiosFileReader:
     re_host_status = re.compile('^hoststatus[ ]+{')
@@ -34,6 +36,7 @@ class NagiosFileReader:
         'plugin_output': re_plugin_output,
     }
 
+
     def __init__(self, filename):
         self._nagios_filename = filename
         try:
@@ -43,7 +46,9 @@ class NagiosFileReader:
             print(f"File {filename} could not be opened")
             raise e
 
+
     def read_status(self):
+        logging.debug(f"read_status from {self._nagios_filename}")
         host_status = []
         svc_status = []
 
@@ -64,6 +69,7 @@ class NagiosFileReader:
             print(e)
 
         return host_status, svc_status
+
 
     def _get_status(selfself, f, attrs):
         d = {}
