@@ -7,6 +7,7 @@ when the Nagios status file is read. This makes the filtering process easier.
 import re
 import logging
 
+
 host_data = [{
     "type": "table",
     "columns": [
@@ -18,6 +19,7 @@ host_data = [{
     ],
     "rows": []
 }]
+
 
 svc_data = [{
     "type": "table",
@@ -31,6 +33,7 @@ svc_data = [{
     ],
     "rows": []
 }]
+
 
 # Make sure the plugin_output does not start with a number (Grafana bug ?)
 def build_host_data(req_data, host_status):

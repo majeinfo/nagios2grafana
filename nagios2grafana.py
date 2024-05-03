@@ -17,8 +17,10 @@ from flask import Flask, json, request
 import nagios_file_reader as nfr
 import status_exporter as exp
 
+
 args = None
 api = None
+
 
 def main():
     global args, api
@@ -48,6 +50,8 @@ def main():
     data_lock = threading.Lock()
 
     def thread_function():
+        global host_status, svc_status
+
         while True:
             with data_lock:
                 host_status, svc_status = reader.read_status()
