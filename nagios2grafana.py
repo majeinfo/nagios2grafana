@@ -20,10 +20,14 @@ import status_exporter as exp
 
 args = None
 api = None
+host_status = None
+svc_status = None
 
 
 def main():
     global args, api
+    global host_status, svc_status
+
     parser = argparse.ArgumentParser(description='Bridge from nagios status.dat to Grafana dashboard')
     parser.add_argument('-v', '--verbosity', action='store_true',
                         help='increase output verbosity')
