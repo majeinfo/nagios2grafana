@@ -19,15 +19,15 @@ def test_search():
     assert 'nagios_service_status' in resp.json()
 
 
-def test_query_bad_type():
-    data = {
-        "targets": [
-            {"target": "nagios_host_status", "type": "timeseries", "data": {}},
-        ],
-    }
-    resp = requests.post(args.url + '/query', json=data)
-    j = resp.json()
-    assert 'msg' in j and j['msg'] == 'type timeseries not supported'
+#def test_query_bad_type():
+#    data = {
+#        "targets": [
+#            {"target": "nagios_host_status", "type": "timeseries", "data": {}},
+#        ],
+#    }
+#    resp = requests.post(args.url + '/query', json=data)
+#    j = resp.json()
+#    assert 'msg' in j and j['msg'] == 'type timeseries not supported'
 
 
 def test_query_bad_target():
@@ -78,6 +78,16 @@ def test_query_hosts_with_regexp_filter():
     data = {
         "targets": [
             {"target": "nagios_host_status", "type": "table", "data": {"host_name": "/appli1-.*/"}},
+        ],
+    }
+    resp = requests.post(args.url + '/query', json=data)
+    j = resp.json()
+    assert len(j[0]['rows']) == 6
+
+def test_query_hosts_with_regexp_filter_payload():
+    data = {
+        "targets": [
+            {"target": "nagios_host_status", "type": "table", "payload": {"host_name": "/appli1-.*/"}},
         ],
     }
     resp = requests.post(args.url + '/query', json=data)

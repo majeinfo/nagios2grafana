@@ -5,6 +5,7 @@ We prefer the lazy model : results are computed for each request and not
 when the Nagios status file is read. This makes the filtering process easier.
 """
 import re
+import logging
 
 host_data = [{
     "type": "table",
@@ -35,6 +36,7 @@ svc_data = [{
 def build_host_data(req_data, host_status):
     host_data[0]['rows'] = []
     _compile_re(req_data)
+    logging.debug(f"filters: {req_data['filters']}")
     for h in host_status:
         if _filtered(req_data, h):
             host_data[0]['rows'].append(
@@ -47,6 +49,7 @@ def build_host_data(req_data, host_status):
 def build_svc_data(req_data, svc_status):
     svc_data[0]['rows'] = []
     _compile_re(req_data)
+    logging.debug(f"filters: {req_data['filters']}")
     for s in svc_status:
         if _filtered(req_data, s):
             svc_data[0]['rows'].append(
@@ -56,20 +59,34 @@ def build_svc_data(req_data, svc_status):
     return svc_data
 
 
+# Grafana may use 'data' or 'payload' key, depending of its version
 def _compile_re(req):
-    if 'data' not in req or type(req['data']) != dict:
+    logging.debug(f"_compile_re: {req}")
+    req['filters'] = {}
+
+    if 'data' in req:
+        if type(req['data']) != dict:
+            return 
+
+        filter_field = 'data'
+    elif 'payload' in req:
+        if type(req['payload']) != dict:
+            return
+
+        filter_field = 'payload'
+    else:
         return
 
-    for attr, value in req['data'].items():
+
+    for attr, value in req[filter_field].items():
         if value[0] == '/' and value[-1] == '/':
-            req['data'][attr] = re.compile(value[1:-1])
+            req['filters'][attr] = re.compile(value[1:-1])
+        else:
+            req['filters'][attr] = value
 
 
 def _filtered(req, data):
-    if 'data' not in req or type(req['data']) != dict:
-        return True
-
-    for attr, value in req['data'].items():
+    for attr, value in req['filters'].items():
         if attr in data:
             #if type(value) == re.Pattern:  (not supported before python3.7)
             if type(value) != str:

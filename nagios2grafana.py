@@ -7,6 +7,7 @@ This Bridge also supports filtering : the filters are given as JSON document in 
 """
 import argparse
 import threading
+import time
 import atexit
 import logging
 import traceback
@@ -44,23 +45,18 @@ def main():
     host_status, svc_status = reader.read_status()
 
     # Create and start the background Thread that will read the Nagios status file
-    def interrupt():
-        logging.debug('interrupt')
-        reader_thread.cancel()
-
-    def refresh_data():
-        nonlocal reader_thread, host_status, svc_status
-        logging.debug(f'refresh_data active threads={threading.active_count()}, current={threading.current_thread()}')
-
-        with data_lock:
-            host_status, svc_status = reader.read_status()
-
-        reader_thread.run()
-
     data_lock = threading.Lock()
-    reader_thread = threading.Timer(args.interval, refresh_data, ())
-    reader_thread.start()
-    atexit.register(interrupt)
+
+    def thread_function():
+        while True:
+            with data_lock:
+                host_status, svc_status = reader.read_status()
+
+            time.sleep(args.interval)
+
+    thread = threading.Thread(target=thread_function)
+    thread.daemon = True
+    thread.start()
 
     # Create the Web Server and handle the requests
     api = Flask(__name__)
